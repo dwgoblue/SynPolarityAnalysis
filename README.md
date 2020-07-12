@@ -276,7 +276,11 @@ Finally, the figures are saving in the `./Demo` folder which should be the same 
 
 <p align="center">
   <img src="./Demo/LRratio_ViolinPlot.png" />
+  Figure 1. The ratio between two poles.
 </p>
 
-![alt-text-1](./Demo/LRratio_ViolinPlot.png =150x) ![alt-text-2](./Demo/TwoProfileComparison.png =350x)
-<p align="center">Figure. (Left) The ratio between two poles. (Right) The comparison between two profiles.</p>
+
+<p align="center">
+  <img src="./Demo/TwoProfileComparison.png" />
+  Figure 2. The comparison between two profiles.
+</p>
