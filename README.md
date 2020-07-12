@@ -274,8 +274,5 @@ The analysis is finishing.
 Finally, the figures are saving in the `./Demo` folder which should be the same as the results below.
 
 
-<img align="center" src="./Demo/LRratio_ViolinPlot.png">
-<p align="center">Figure 1. The ratio between two poles. </p>
-
-<img align="center" src="./Demo/TwoProfileComparison.png">
-<p align="center">Figure 2. The comparison between two profiles.</p>
+![img1](./Demo/LRratio_ViolinPlot.png =150x) ![img2](./Demo/TwoProfileComparison.png =350x)
+<p align="center">Figure. (Left) The ratio between two poles. (Right) The comparison between two profiles.</p>
