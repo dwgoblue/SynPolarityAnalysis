@@ -239,7 +239,6 @@ class PlotMethods():
         max1 = (profile1_arr[0]).max()
         max2 = (profile2_arr[0]).max()
         maxmax = np.max([max1, max2])
-        print('maxmax', maxmax)
         line1 = ax.plot(x_scale, profile1_arr[0]/maxmax,
                         color='tomato', linewidth=3, label='{}'.format(names[0]))
         ax.fill_between(x_scale, (profile1_arr[0]-profile1_arr[1])/maxmax, (profile1_arr[0]+profile1_arr[1])/maxmax, alpha=0.2, facecolor='tomato', edgecolor='tomato', linewidth=0.0)

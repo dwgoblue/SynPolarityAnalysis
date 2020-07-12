@@ -5,10 +5,11 @@ Image data analysis of synthetic unipolarity in E. coli
 `SynPolarityAnalysis` is a Python script for analyzing spatial organizing protein distribution in bacterial cell. 
 
 - [Overview](#overview)
-- [Documentation](#documentation)
 - [System Requirements](#system-requirements)
 - [Installation Guide](#installation-guide)
-- [Data Analysis](#setting-up-the-development-environment)
+- [Data Input](#data-input)
+- [Execute Data Analysis](#execute-data-analysis)
+- [Demo](#demo)
 
 # Overview
 Our script serves as an interface containing self-defined scores and statistical tools to visualize the characteristics of spatial features such as polarity. The software Oufti is required to convert the image data into MATLAB structure array and save in `.mat` files. Our script serves as an interface containing tools to visualize the characteristics of spatial features such as polarity.
@@ -67,9 +68,8 @@ The procedure to analyze time-lapse images is similar to the process for snapsho
 ...
 ```
 
-## Data Analysis
+## Data Input
 
-### Data inputs
 There are two ways that you can inform the program where the files are for analysis:
 
 1. You are able to add a new function block in `DataInput.py` for which here provides a template.
@@ -102,9 +102,31 @@ def fig1a():
 
 	return Data
 ```
-2. The second way is to create or edit `DataInput.txt`.
+2. The second way is to create or edit `DataInput.txt`. In the file, you are asked to fill out the table like the example below.
+```
+=======================================================
+parent_path:/home/user/data
+input_mode:file
+group_number:3
+channels:2;2;2
+PopZ:Y;Y;Y
+labels:Red;Blue;Green
+name_1:Red1.mat;Red2.mat
+name_2:Blue1.mat;Blue2.mat
+name_3:Green1.mat;Green2.mat
+=======================================================
+```
+- `parent_path`: The script should be able to access the folder of "all" data by the path. Absolute path is recommended.
+- `input_mode`: The type of inputs in `name_N` can be files or a folder. That is, you can enter `folder` in this field instead.
+- `group_number`: Please write down how many groups are used for analysis which should correspond to the number of `name_N`.
+- `channels`: It depends on how many channels of fluorescence are recorded in your `.mat` files. Please type 
+- `PopZ`: To inform the script whether the group has the expression of the unipolar protein PopZ, `Y` (YES) or `N` (NO) is entered into this field. It is also applicable if you are using other protein with similar behaviors.
+- `labels`: Name of each group. You may want to show a concise name for an experimental group on figures.
+- `name_N`: Exact names of files or folders. You may want to add a new `name_N` field if there are more groups. Noted that `N` should be strictly follow the sequence of numbers.
 
-### Execute the scripts
+The next section will introduce how to execute the analysis by these two strategies.
+
+## Execute Data Analysis
 The script offers four pipelines to analyze microscopy data converted from Oufti, including 
 ```
 PopZOnlyPipline 
@@ -159,3 +181,99 @@ from Piplines import*
 Starter = PiplinesObj(TL_Exp, TimeLapse=True)
 Starter.TimeLapsePipline()
 ```
+### Execute the script based on `DataInput.txt`
+If you choose to introduce the input files via the `DataInput.txt`, the following code block is recommended. Noted that the path fed into the function indicates the location of the `.txt` file.
+```
+from Piplines import*
+Starter = PiplinesObj(TL_Exp, TimeLapse=True)
+Starter.TimeLapsePipline()
+```
+
+## Demo
+In this section, we will go through an example analysis process step by step. Hopefully, the information could provide a guidance of how to use the script.
+
+### Folder Structure
+While the location of data could be change, the relative path of each script must be maintained the same as the structure below.
+```
+.root
++-- PlotFunc.py
++-- Piplines.py
++-- ReadDataFunc.py
++-- AnalysisFunc.py
++-- DataInput.py
++-- AdditionalFunc.py
++-- DataInput.txt
++-- Demo_notebook.ipynb
++-- Demo_exe.py
++-- Demo
+| +-- [Demo]DataInput_folder.txt
+| +-- 32NSSC
+  | +-- 32NSSC.mat
+| +-- 32NSSCP
+  | +-- 32NSSCP.mat
+...
+```
+### Edit the `DataInput.txt`
+To indicate where the data is and other essential information for running analysis, we have to change the content of the `.txt` file. Here, we provide an example file in the `Demo` folder, `[Demo]DataInput_folder.txt`, in which "folder" mode is implemented. 
+```
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+parent_path:./Demo
+input_mode:folder
+group_number:2
+channels:2;2
+PopZ:N;Y
+labels:NSSC-32;NSSCP-32
+name_1:32NSSC
+name_2:32NSSCP
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+```
+Because red and green fluorescence were recorded in the files, we entered `2` for the field of channels. However, there was no PopZ expressed in the group of `NSSC-32` which should be marked by `N` in the `PopZ` field.
+
+### Initiation of analysis
+Before running the script, we have to modify the code block of the main program in `Demo_notebook.ipynb` or `Demo_exe.py`.
+```
+from Piplines import*
+
+# Apply absolute path if needed.
+path = r'./Demo/[Demo]DataInput_folder.txt'
+
+# Change the first input from _ to "" in older version.
+Starter = PiplinesObj(_, TimeLapse=False,
+                      columns=[(0,1)],
+                      mode='txt',
+                      txt_path=path)
+                      
+# Analysis of LR ratio and two-profiles comparison.
+Starter.TwoChannelPipline(plots=['lr', 'twoprofiles'],
+                          twoselect=['NSSCP-32', 'NSSC-32'])
+``` 
+If `Demo_notebook.ipynb` is chosen to run the demo, please initiate Jupyterlab or Jupyter notebook. After that, the code block of analysis is capable of running. 
+```
+(Terminal)$Jupyter-lab
+```
+Alternatively, you could simply execute the analysis with `Demo_exe.py`. In the terminal, you can run the script by the command below.
+```
+(Terminal)$cd [the path to access the Demo folder]
+(Terminal)$python3 ./Demo_exe.py
+```
+If it works, the output should be
+```
+Start to process the group of NSSC-32 .
+Processing 30 cells in signal0.
+Processing 30 cells in signal1.
+Start to process the group of NSSCP-32 .
+Processing 29 cells in signal0.
+Processing 29 cells in signal1.
+The group NSSC-32 has n= 30 after unipolar PopZ selection.
+The group NSSC-32 has n= 30
+The group NSSCP-32 has n= 15 after unipolar PopZ selection.
+The group NSSCP-32 has n= 15
+ttest_ind:            t = -6.59319  p = 5.01037e-08
+The analysis is finishing.
+```
+Finally, the figures are saving in the `./Demo` folder which should be the same as the results below.
+
+![alt text](./Demo/LRratio_ViolinPlot.png)
+Figure 1. the ratio between two poles.
+![alt text](./Demo/TwoProfileComparison.png)
+Figure 2. the comparison between two profiles.

@@ -327,13 +327,13 @@ class PiplinesObj():
                     f.write('{0} n={1} \n'.format(subfolder[0], len(select_ind)))
                 # Save profiles for comparison.
                 if subfolder[0]==twoselect[0]:
-                    print('save!!')
+#                     print('save!!')
                     avg_arr, std_arr, EditProfiles = profile_statistics([
                         EditProfiles[ind] for ind in select_ind], Norm=False)
                     arr1collect = (avg_arr, std_arr)
                     
                 if subfolder[0]==twoselect[1]:
-                    print('save!!')
+#                     print('save!!')
                     avg_arr, std_arr, EditProfiles = profile_statistics([
                         EditProfiles[ind] for ind in select_ind], Norm=False)
                     arr2collect = (avg_arr, std_arr)
