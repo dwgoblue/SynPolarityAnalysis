@@ -7,9 +7,12 @@ Image data analysis of synthetic unipolarity in E. coli
 - [Overview](#overview)
 - [System Requirements](#system-requirements)
 - [Installation Guide](#installation-guide)
+- [Data Acquisitions](#data-acquisitions)
 - [Data Input](#data-input)
 - [Execute Data Analysis](#execute-data-analysis)
 - [Demo](#demo)
+- [License](#license)
+
 
 # Overview
 Our script serves as an interface containing self-defined scores and statistical tools to visualize the characteristics of spatial features such as polarity. The software Oufti is required to convert the image data into MATLAB structure array and save in `.mat` files. Our script serves as an interface containing tools to visualize the characteristics of spatial features such as polarity.
@@ -37,14 +40,14 @@ seaborn
 
 # Installation Guide:
 
-### Install from Github
+## Install from Github
 ```
 git clone https://github.com/dwgoblue/SynPolarityAnalysis.git
 ```
 
-## Data Acquisitions
+# Data Acquisitions
 
-### Raw Data Acquisitions
+## Raw Data Acquisitions
 You need to follow the following workflow to ensure correct analysis. 
 - Load phase contrast images into Oufti as channel 0.
 - Load fluorescence signals with unipolar protein, e.g. PopZ, as channel 1.
@@ -52,7 +55,7 @@ You need to follow the following workflow to ensure correct analysis.
 
 Once finished, cells could be isolated manually or automatically which initiates a structure array to record information of each cell. The next step is to reuse meshes which records the positions of cells in order to extract fluorescent signals. We recommend visit the Oufti instructions (https://oufti.org/application.htm) and get more details about the uses of Oufti.
 
-### Time-lapse data acquisitions
+## Time-lapse data acquisitions
 The procedure to analyze time-lapse images is similar to the process for snapshot images. Specifically, the recordings have to be separated by time points. It is noted that the images can only contain one cell and its daughter cell if you plan to analyze single cell division e.g. kymograph. More importantly, one folder must contain one cell data, and the name of the `.mat` files must stick to the series of time points. For example, time-lapse `.mat` files of a cell with `ID:1` have to be put in the same folder and. The files inside the folder are named `1`, `2`, `3` if the files are recorded at three sequential time points.
 ```
 .
@@ -68,7 +71,7 @@ The procedure to analyze time-lapse images is similar to the process for snapsho
 ...
 ```
 
-## Data Input
+# Data Input
 
 There are two ways that you can inform the program where the files are for analysis:
 
@@ -126,7 +129,7 @@ name_3:Green1.mat;Green2.mat
 
 The next section will introduce how to execute the analysis by these two strategies.
 
-## Execute Data Analysis
+# Execute Data Analysis
 The script offers four pipelines to analyze microscopy data converted from Oufti, including 
 ```
 PopZOnlyPipline 
@@ -134,7 +137,7 @@ DiffuseSignalPipline
 TwoChannelPipline
 TimeLapsePipline
 ```
-### PopZ-only Data
+## PopZ-only Data
 If there is only one channel which is PopZ signal saved in the `.mat` file, we can apply the `PopZOnlyPipline` in which `tot` (total intensity) and `pks` (peak score) analysis are offered. Here is an example to call the function.
 ```
 from Piplines import*
@@ -143,7 +146,7 @@ Starter = PiplinesObj(fig2j,
                       columns=[(0,1)])
 Starter.TwoChannelPipline(plots=['tot'])
 ```
-### Signals Recorded from Diffusible Protein
+###Signals Recorded from Diffusible Protein
 If you are not assumed the protein with spatial patterns, and there is only one channel saved in the `.mat` file, we can apply the `DiffuseSignalPipline` in which `tot-box` (total intensity with boxplot) and`tot-box` (total intensity with violinplot) analysis are offered. Here is an example to call the function.
 ```
 from Piplines import*
@@ -153,7 +156,7 @@ Starter = PiplinesObj(fig2j,
 Starter.DiffuseSignalPipline(plots=['tot-box'])
 ```
 
-### Signals recorded in two or more channels
+## Signals recorded in two or more channels
 If you are not assumed the protein with spatial patterns, and there is only one channel saved in the `.mat` file, we can apply the `DiffuseSignalPipline` in which `tot-box` (total intensity with boxplot) and`tot-box` (total intensity with violinplot) analysis are offered. Here is an example to call the function.
 ```
 from Piplines import*
@@ -174,14 +177,14 @@ Starter.TwoChannelPipline(plots=['pearson'],
 ```
 Moreover, the function offers choices `tot`, `pearson`, `ps`, `lr`, `twoprofile`, `ms`, `trace` and `statprofile` for analysis.
 
-### Time-lapse Data
+## Time-lapse Data
 After rearranging files and folders following to the rules mentioned in the previous section, you are able to execute the analysis for time-lapse data.
 ```
 from Piplines import*
 Starter = PiplinesObj(TL_Exp, TimeLapse=True)
 Starter.TimeLapsePipline()
 ```
-### Execute the script based on `DataInput.txt`
+## Execute the script based on `DataInput.txt`
 If you choose to introduce the input files via the `DataInput.txt`, the following code block is recommended. Noted that the path fed into the function indicates the location of the `.txt` file.
 ```
 from Piplines import*
@@ -189,10 +192,10 @@ Starter = PiplinesObj(TL_Exp, TimeLapse=True)
 Starter.TimeLapsePipline()
 ```
 
-## Demo
+# Demo
 In this section, we will go through an example analysis process step by step. Hopefully, the information could provide a guidance of how to use the script.
 
-### Folder Structure
+## Folder Structure
 While the location of data could be change, the relative path of each script must be maintained the same as the structure below.
 ```
 .root
@@ -213,7 +216,7 @@ While the location of data could be change, the relative path of each script mus
   | +-- 32NSSCP.mat
 ...
 ```
-### Edit the `DataInput.txt`
+## Edit the `DataInput.txt`
 To indicate where the data is and other essential information for running analysis, we have to change the content of the `.txt` file. Here, we provide an example file in the `Demo` folder, `[Demo]DataInput_folder.txt`, in which "folder" mode is implemented. 
 ```
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -229,7 +232,7 @@ name_2:32NSSCP
 ```
 Because red and green fluorescence were recorded in the files, we entered `2` for the field of channels. However, there was no PopZ expressed in the group of `NSSC-32` which should be marked by `N` in the `PopZ` field.
 
-### Initiation of analysis
+## Initiation of analysis
 Before running the script, we have to modify the code block of the main program in `Demo_notebook.ipynb` or `Demo_exe.py`.
 ```
 from Piplines import*
@@ -286,3 +289,7 @@ Figure 1. The ratio between two poles.
   <img src="./Demo/TwoProfileComparison.png" />
   Figure 2. The comparison between two profiles.
 </p>
+
+# License
+
+This project is covered under the **Apache 2.0 License**.
