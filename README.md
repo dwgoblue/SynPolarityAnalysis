@@ -275,5 +275,7 @@ Finally, the figures are saving in the `./Demo` folder which should be the same 
 
 
 <img align="center" src="./Demo/LRratio_ViolinPlot.png">
+<p align="center">Figure 1. The ratio between two poles. </p>
+
 <img align="center" src="./Demo/TwoProfileComparison.png">
-<p align="center">Figure. (left) The ratio between two poles. (right) The comparison between two profiles.</p>
+<p align="center">Figure 2. The comparison between two profiles.</p>
